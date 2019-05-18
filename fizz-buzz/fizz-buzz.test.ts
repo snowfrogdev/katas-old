@@ -3,7 +3,7 @@ import { FizzBuzz } from "./fizz-buzz";
 const loggerMock = jest.fn();
 const fizzBuzz = new FizzBuzz(loggerMock);
 
-describe ('fizzBuzz kata', () => {
+xdescribe ('fizzBuzz kata', () => {
 
     test('fizzBuzz method calls logger with proper parameter', () => {
         fizzBuzz.fizzBuzz();
