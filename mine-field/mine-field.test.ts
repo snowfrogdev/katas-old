@@ -1,6 +1,6 @@
 import { generateHintField } from "./mine-field";
 
-describe('mine-field kata', () => {
+xdescribe('mine-field kata', () => {
 
     test('generateHintField with 3 X 4 input', () => {
         const input =
