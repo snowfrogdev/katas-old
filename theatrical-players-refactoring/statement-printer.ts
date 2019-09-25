@@ -34,15 +34,7 @@ export class StatementPrinter {
     return result;
   }
 
-  private format(value: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    }).format(value);
-  }
-
-  private calculateAmount(performance: Performance) {
+  private calculateAmount(performance: Performance): number {
     let amount = 0;
     const playType = this.getPlayById(performance.playID).type;
     switch (playType) {
@@ -65,7 +57,7 @@ export class StatementPrinter {
     return amount;
   }
 
-  private calculateVolumeCredits(performance: Performance) {
+  private calculateVolumeCredits(performance: Performance): number {
     let volumeCredits = 0;
     volumeCredits += Math.max(performance.audience - 30, 0);
     if ('comedy' === this.getPlayById(performance.playID).type)
@@ -75,5 +67,13 @@ export class StatementPrinter {
 
   private getPlayById(playId: string): Play {
     return this.plays[playId];
+  }
+
+  private format(value: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    }).format(value);
   }
 }
