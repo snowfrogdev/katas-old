@@ -14,17 +14,17 @@ export class StatementPrinter {
       let thisAmount = 0;
       switch (play.type) {
         case 'tragedy':
-          thisAmount = 40000;
+          thisAmount = 400_00;
           if (perf.audience > 30) {
-            thisAmount += 1000 * (perf.audience - 30);
+            thisAmount += 10_00 * (perf.audience - 30);
           }
           break;
         case 'comedy':
-          thisAmount = 30000;
+          thisAmount = 300_00;
           if (perf.audience > 20) {
-            thisAmount += 10000 + 500 * (perf.audience - 20);
+            thisAmount += 100_00 + 5_00 * (perf.audience - 20);
           }
-          thisAmount += 300 * perf.audience;
+          thisAmount += 3_00 * perf.audience;
           break;
         default:
           throw new Error(`unknown type: ${play.type}`);
