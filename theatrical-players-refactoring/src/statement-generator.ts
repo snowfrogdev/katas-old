@@ -38,14 +38,14 @@ export class StatementGenerator {
     }).format(value / 100);
   }
 
-  public calculateTotalAmount(invoice: Invoice): number {
+  private calculateTotalAmount(invoice: Invoice): number {
     return invoice.performances.reduce((total, performance) => {
       const performanceCalculator = this.createPerformanceCalculator(performance);
       return total + performanceCalculator.calculatePerformanceAmount();
     }, 0);
   }
 
-  public calculateTotalVolumeCredits(invoice: Invoice): number {
+  private calculateTotalVolumeCredits(invoice: Invoice): number {
     return invoice.performances.reduce((total, performance) => {
       const performanceCalculator = this.createPerformanceCalculator(performance);
       return total + performanceCalculator.calculatePerformanceVolumeCredits();
