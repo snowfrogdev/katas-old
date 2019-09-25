@@ -78,16 +78,17 @@ export class StatementPrinter {
     private performanceCalculator: PerformanceCalculator,
     private invoiceCalculator: InvoiceCalculator
   ) {}
-  print(invoice: Invoice) {
+  print(invoice: Invoice): string {
     let totalAmount = this.invoiceCalculator.calculateTotalAmount(invoice);
     const volumeCredits = this.invoiceCalculator.calculateTotalVolumeCredits(invoice);
-    let result = `Statement for ${invoice.customer}\n`;
+    return this.produceStatementText(invoice, totalAmount, volumeCredits);
+  }
 
+  private produceStatementText(invoice: Invoice, totalAmount: number, volumeCredits: number) {
+    let result = `Statement for ${invoice.customer}\n`;
     for (const performance of invoice.performances) {
       // print line for this order
-      result += ` ${this.plays.get(performance.playID)!.name}: ${this.formatCentsToUSD(
-        this.performanceCalculator.calculatePerformanceAmount(performance)
-      )} (${performance.audience} seats)\n`;
+      result += ` ${this.plays.get(performance.playID)!.name}: ${this.formatCentsToUSD(this.performanceCalculator.calculatePerformanceAmount(performance))} (${performance.audience} seats)\n`;
     }
     result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
