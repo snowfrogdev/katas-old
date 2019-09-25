@@ -28,7 +28,7 @@ export class StatementPrinter {
     for (const performance of invoice.performances) {
       const play = this.getPlayById(performance.playID);
       const thisAmount = this.calculateAmount(performance);
-      volumeCredits += this.calculateVolumeCredits(performance, play);
+      volumeCredits += this.calculateVolumeCredits(performance);
       // print line for this order
       result += ` ${play.name}: ${format(thisAmount / 100)} (${performance.audience} seats)\n`;
       totalAmount += thisAmount;
@@ -38,10 +38,10 @@ export class StatementPrinter {
     return result;
   }
 
-  private calculateVolumeCredits(performance: Performance, play: Play) {
+  private calculateVolumeCredits(performance: Performance) {
     let volumeCredits = 0;
     volumeCredits += Math.max(performance.audience - 30, 0);
-    if ('comedy' === play.type)
+    if ('comedy' === this.getPlayById(performance.playID).type)
       volumeCredits += Math.floor(performance.audience / 5);
     return volumeCredits;
   }
