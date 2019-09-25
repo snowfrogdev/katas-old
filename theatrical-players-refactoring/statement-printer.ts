@@ -21,12 +21,11 @@ export class StatementPrinter {
     let result = `Statement for ${invoice.customer}\n`;
 
     for (const performance of invoice.performances) {
-      const thisAmount = this.calculatePerformanceAmount(performance);
       // print line for this order
       result += ` ${this.getPlayById(performance.playID).name}: ${this.formatCentsToUSD(
-        thisAmount
+        this.calculatePerformanceAmount(performance)
       )} (${performance.audience} seats)\n`;
-      totalAmount += thisAmount;
+      totalAmount += this.calculatePerformanceAmount(performance);
     }
     result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
