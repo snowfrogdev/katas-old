@@ -9,7 +9,8 @@ interface Performance {
 }
 
 export class StatementPrinter {
-  print(invoice: any, plays: any) {
+  constructor(private plays: {[index: string]: Play }) {}
+  print(invoice: any) {
     let totalAmount = 0;
     let volumeCredits = 0;
     let result = `Statement for ${invoice.customer}\n`;
@@ -20,7 +21,7 @@ export class StatementPrinter {
     }).format;
 
     for (let perf of invoice.performances) {
-      const play = plays[perf.playID];
+      const play = this.plays[perf.playID];
       const thisAmount = this.calculateAmount(play, perf);
       // add volume credits
       volumeCredits += Math.max(perf.audience - 30, 0);

@@ -4,14 +4,14 @@ import * as plays from "./plays.json";
 import * as newInvoice from "./invoice_new_plays.json";
 import * as newPlays from "./new_plays.json";
 
-const printer = new StatementPrinter();
-
 test('example statement', () => {
-  expect(printer.print(invoice, plays)).toMatchSnapshot();
+  const printer = new StatementPrinter(plays);
+  expect(printer.print(invoice)).toMatchSnapshot();
 });
 
 test('statement with new play types', () => {
   expect(() => {
-    printer.print(newInvoice, newPlays);
+    const printer = new StatementPrinter(newPlays);
+    printer.print(newInvoice);
   }).toThrow(/unknown type/);
 });
