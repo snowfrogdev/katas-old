@@ -59,12 +59,10 @@ export class StatementGenerator {
   }
 }
 
-export class PerformanceCalculator {
+export abstract class PerformanceCalculator {
   constructor(private plays: Map<string, Play>) {}
 
-  public calculatePerformanceAmount(performance: Performance): number {
-    throw 'implemented in subclass';
-  }
+  abstract calculatePerformanceAmount(performance: Performance): number
 
   public calculatePerformanceVolumeCredits(performance: Performance): number {
     let volumeCredits = 0;
