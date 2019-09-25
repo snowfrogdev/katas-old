@@ -18,6 +18,11 @@ interface Invoice {
   performances: Performance[];
 }
 
+interface Statement {
+  totalAmount: number,
+  volumeCredits: number
+}
+
 export class PerformanceCalculator {
   constructor(private plays: Map<string, Play>) {}
 
@@ -79,20 +84,26 @@ export class StatementPrinter {
     private invoiceCalculator: InvoiceCalculator
   ) {}
   print(invoice: Invoice): string {
-    let totalAmount = this.invoiceCalculator.calculateTotalAmount(invoice);
-    const volumeCredits = this.invoiceCalculator.calculateTotalVolumeCredits(invoice);
-    return this.produceStatementText(invoice, totalAmount, volumeCredits);
+    const statement = this.generateStatement(invoice);
+    return this.produceStatementText(invoice, statement);
   }
 
-  private produceStatementText(invoice: Invoice, totalAmount: number, volumeCredits: number) {
+  private produceStatementText(invoice: Invoice, statement: Statement) {
     let result = `Statement for ${invoice.customer}\n`;
     for (const performance of invoice.performances) {
       // print line for this order
       result += ` ${this.plays.get(performance.playID)!.name}: ${this.formatCentsToUSD(this.performanceCalculator.calculatePerformanceAmount(performance))} (${performance.audience} seats)\n`;
     }
-    result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
-    result += `You earned ${volumeCredits} credits\n`;
+    result += `Amount owed is ${this.formatCentsToUSD(statement.totalAmount)}\n`;
+    result += `You earned ${statement.volumeCredits} credits\n`;
     return result;
+  }
+
+  private generateStatement(invoice: Invoice): Statement {
+    return {
+      totalAmount: this.invoiceCalculator.calculateTotalAmount(invoice),
+      volumeCredits: this.invoiceCalculator.calculateTotalVolumeCredits(invoice)
+    }
   }
 
   private formatCentsToUSD(value: number): string {
