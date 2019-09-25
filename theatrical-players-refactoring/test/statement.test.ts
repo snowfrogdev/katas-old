@@ -1,13 +1,14 @@
-import { statement } from "../statement";
-
+import { StatementPrinter } from "../statement";
 const fs = require('fs');
+
+const printer = new StatementPrinter();
 
 test('example statement', () => {
   const invoice = JSON.parse(fs.readFileSync('theatrical-players-refactoring/test/invoice.json', 'utf8'));
   const plays = JSON.parse(
     fs.readFileSync('theatrical-players-refactoring/test/plays.json', 'utf8')
   );
-  expect(statement(invoice, plays)).toMatchSnapshot();
+  expect(printer.print(invoice, plays)).toMatchSnapshot();
 });
 
 test('statement with new play types', () => {
@@ -18,6 +19,6 @@ test('statement with new play types', () => {
     fs.readFileSync('theatrical-players-refactoring/test/new_plays.json', 'utf8')
   );
   expect(() => {
-    statement(invoice, plays);
+    printer.print(invoice, plays);
   }).toThrow(/unknown type/);
 });
