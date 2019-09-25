@@ -9,7 +9,7 @@ interface Performance {
 }
 
 export class StatementPrinter {
-  constructor(private plays: {[index: string]: Play }) {}
+  constructor(private plays: { [index: string]: Play }) {}
   print(invoice: any) {
     let totalAmount = 0;
     let volumeCredits = 0;
@@ -22,7 +22,7 @@ export class StatementPrinter {
 
     for (let perf of invoice.performances) {
       const play = this.getPlayById(perf.playID);
-      const thisAmount = this.calculateAmount(play, perf);
+      const thisAmount = this.calculateAmount(perf);
       // add volume credits
       volumeCredits += Math.max(perf.audience - 30, 0);
       // add extra credit for every ten comedy attendees
@@ -40,9 +40,10 @@ export class StatementPrinter {
     return this.plays[playId];
   }
 
-  private calculateAmount(play: Play, performance: Performance) {
+  private calculateAmount(performance: Performance) {
     let amount = 0;
-    switch (play.type) {
+    const playType = this.getPlayById(performance.playID).type;
+    switch (playType) {
       case 'tragedy':
         amount = 40000;
         if (performance.audience > 30) {
@@ -57,7 +58,7 @@ export class StatementPrinter {
         amount += 300 * performance.audience;
         break;
       default:
-        throw new Error(`unknown type: ${play.type}`);
+        throw new Error(`unknown type: ${playType}`);
     }
     return amount;
   }
