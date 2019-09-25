@@ -53,17 +53,27 @@ export class PerformanceCalculator {
   }
 }
 
+export class InvoiceCalculator {
+  constructor(private performanceCalculator: PerformanceCalculator) {}
+  public calculateTotalAmount(invoice: Invoice): number {
+    return invoice.performances.reduce(
+      (total, performance) => total + this.performanceCalculator.calculatePerformanceAmount(performance),
+      0
+    );
+  }
+}
+
 export class StatementPrinter {
-  constructor(private plays: Map<string, Play>, private calculator: PerformanceCalculator) {}
+  constructor(private plays: Map<string, Play>, private performanceCalculator: PerformanceCalculator, private invoiceCalculator: InvoiceCalculator) {}
   print(invoice: Invoice) {
-    let totalAmount = this.calculateTotalAmount(invoice);
+    let totalAmount = this.invoiceCalculator.calculateTotalAmount(invoice);
     const volumeCredits = this.calculateTotalVolumeCredits(invoice);
     let result = `Statement for ${invoice.customer}\n`;
 
     for (const performance of invoice.performances) {
       // print line for this order
       result += ` ${this.plays.get(performance.playID)!.name}: ${this.formatCentsToUSD(
-        this.calculator.calculatePerformanceAmount(performance)
+        this.performanceCalculator.calculatePerformanceAmount(performance)
       )} (${performance.audience} seats)\n`;
     }
     result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
@@ -71,16 +81,9 @@ export class StatementPrinter {
     return result;
   }
 
-  private calculateTotalAmount(invoice: Invoice): number {
-    return invoice.performances.reduce(
-      (total, performance) => total + this.calculator.calculatePerformanceAmount(performance),
-      0
-    );
-  }
-
   private calculateTotalVolumeCredits(invoice: Invoice): number {
     return invoice.performances.reduce(
-      (total, performance) => total + this.calculator.calculatePerformanceVolumeCredits(performance),
+      (total, performance) => total + this.performanceCalculator.calculatePerformanceVolumeCredits(performance),
       0
     );
   }
