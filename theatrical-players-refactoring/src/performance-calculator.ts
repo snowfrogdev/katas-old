@@ -1,4 +1,4 @@
-import { PlayType } from "./statement-generator";
+import { PlayType } from './statement-generator';
 
 export abstract class PerformanceCalculator {
   constructor(private plays: Map<string, Play>) {}
@@ -8,8 +8,6 @@ export abstract class PerformanceCalculator {
   public calculatePerformanceVolumeCredits(performance: Performance): number {
     let volumeCredits = 0;
     volumeCredits += Math.max(performance.audience - 30, 0);
-    if (PlayType.Comedy === this.plays.get(performance.playID)!.type)
-      volumeCredits += Math.floor(performance.audience / 5);
     return volumeCredits;
   }
 }
@@ -22,6 +20,12 @@ export class ComedyPerformanceCalculator extends PerformanceCalculator {
     }
     amount += 3_00 * performance.audience;
     return amount;
+  }
+
+  calculatePerformanceVolumeCredits(performance: Performance) {
+    return (
+      super.calculatePerformanceVolumeCredits(performance) + Math.floor(performance.audience / 5)
+    );
   }
 }
 
