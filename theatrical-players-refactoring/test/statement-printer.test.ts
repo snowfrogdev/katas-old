@@ -1,4 +1,4 @@
-import { StatementPrinter } from "../statement";
+import { StatementPrinter } from "../statement-printer";
 const fs = require('fs');
 
 const printer = new StatementPrinter();
