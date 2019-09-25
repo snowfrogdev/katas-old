@@ -24,12 +24,12 @@ export class StatementPrinter {
       const thisAmount = this.calculateAmount(performance);
       volumeCredits += this.calculateVolumeCredits(performance);
       // print line for this order
-      result += ` ${this.getPlayById(performance.playID).name}: ${this.format(thisAmount)} (${
-        performance.audience
-      } seats)\n`;
+      result += ` ${this.getPlayById(performance.playID).name}: ${this.formatCentsToUSD(
+        thisAmount
+      )} (${performance.audience} seats)\n`;
       totalAmount += thisAmount;
     }
-    result += `Amount owed is ${this.format(totalAmount)}\n`;
+    result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
   }
@@ -69,7 +69,7 @@ export class StatementPrinter {
     return this.plays[playId];
   }
 
-  private format(value: number): string {
+  private formatCentsToUSD(value: number): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
