@@ -18,39 +18,10 @@ interface Invoice {
   performances: Performance[];
 }
 
-export class StatementPrinter {
+export class PerformanceCalculator {
   constructor(private plays: Map<string, Play>) {}
-  print(invoice: Invoice) {
-    let totalAmount = this.calculateTotalAmount(invoice);
-    const volumeCredits = this.calculateTotalVolumeCredits(invoice);
-    let result = `Statement for ${invoice.customer}\n`;
 
-    for (const performance of invoice.performances) {
-      // print line for this order
-      result += ` ${this.plays.get(performance.playID)!.name}: ${this.formatCentsToUSD(
-        this.calculatePerformanceAmount(performance)
-      )} (${performance.audience} seats)\n`;
-    }
-    result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
-    result += `You earned ${volumeCredits} credits\n`;
-    return result;
-  }
-
-  private calculateTotalAmount(invoice: Invoice): number {
-    return invoice.performances.reduce(
-      (total, performance) => total + this.calculatePerformanceAmount(performance),
-      0
-    );
-  }
-
-  private calculateTotalVolumeCredits(invoice: Invoice): number {
-    return invoice.performances.reduce(
-      (total, performance) => total + this.calculatePerformanceVolumeCredits(performance),
-      0
-    );
-  }
-
-  private calculatePerformanceAmount(performance: Performance): number {
+  public calculatePerformanceAmount(performance: Performance): number {
     let amount = 0;
     const playType = this.plays.get(performance.playID)!.type;
     switch (playType) {
@@ -71,6 +42,39 @@ export class StatementPrinter {
         throw new Error(`unknown type: ${playType}`);
     }
     return amount;
+  }
+}
+
+export class StatementPrinter {
+  constructor(private plays: Map<string, Play>, private calculator: PerformanceCalculator) {}
+  print(invoice: Invoice) {
+    let totalAmount = this.calculateTotalAmount(invoice);
+    const volumeCredits = this.calculateTotalVolumeCredits(invoice);
+    let result = `Statement for ${invoice.customer}\n`;
+
+    for (const performance of invoice.performances) {
+      // print line for this order
+      result += ` ${this.plays.get(performance.playID)!.name}: ${this.formatCentsToUSD(
+        this.calculator.calculatePerformanceAmount(performance)
+      )} (${performance.audience} seats)\n`;
+    }
+    result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
+    result += `You earned ${volumeCredits} credits\n`;
+    return result;
+  }
+
+  private calculateTotalAmount(invoice: Invoice): number {
+    return invoice.performances.reduce(
+      (total, performance) => total + this.calculator.calculatePerformanceAmount(performance),
+      0
+    );
+  }
+
+  private calculateTotalVolumeCredits(invoice: Invoice): number {
+    return invoice.performances.reduce(
+      (total, performance) => total + this.calculatePerformanceVolumeCredits(performance),
+      0
+    );
   }
 
   private calculatePerformanceVolumeCredits(performance: Performance): number {
