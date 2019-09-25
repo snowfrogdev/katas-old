@@ -43,6 +43,14 @@ export class PerformanceCalculator {
     }
     return amount;
   }
+
+  public calculatePerformanceVolumeCredits(performance: Performance): number {
+    let volumeCredits = 0;
+    volumeCredits += Math.max(performance.audience - 30, 0);
+    if (PlayType.Comedy === this.plays.get(performance.playID)!.type)
+      volumeCredits += Math.floor(performance.audience / 5);
+    return volumeCredits;
+  }
 }
 
 export class StatementPrinter {
@@ -72,17 +80,9 @@ export class StatementPrinter {
 
   private calculateTotalVolumeCredits(invoice: Invoice): number {
     return invoice.performances.reduce(
-      (total, performance) => total + this.calculatePerformanceVolumeCredits(performance),
+      (total, performance) => total + this.calculator.calculatePerformanceVolumeCredits(performance),
       0
     );
-  }
-
-  private calculatePerformanceVolumeCredits(performance: Performance): number {
-    let volumeCredits = 0;
-    volumeCredits += Math.max(performance.audience - 30, 0);
-    if (PlayType.Comedy === this.plays.get(performance.playID)!.type)
-      volumeCredits += Math.floor(performance.audience / 5);
-    return volumeCredits;
   }
 
   private formatCentsToUSD(value: number): string {
