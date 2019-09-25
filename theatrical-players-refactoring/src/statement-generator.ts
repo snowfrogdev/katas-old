@@ -17,7 +17,7 @@ export class StatementGenerator {
           audience: performance.audience,
           playName: this.plays.get(performance.playID)!.name,
           amount: this.formatCentsToUSD(
-            performanceCalculator.calculatePerformanceAmount(performance)
+            performanceCalculator.calculatePerformanceAmount()
           )
         };
       }),
@@ -37,14 +37,14 @@ export class StatementGenerator {
   public calculateTotalAmount(invoice: Invoice): number {
     return invoice.performances.reduce((total, performance) => {
       const performanceCalculator = this.createPerformanceCalculator(performance);
-      return total + performanceCalculator.calculatePerformanceAmount(performance);
+      return total + performanceCalculator.calculatePerformanceAmount();
     }, 0);
   }
 
   public calculateTotalVolumeCredits(invoice: Invoice): number {
     return invoice.performances.reduce((total, performance) => {
       const performanceCalculator = this.createPerformanceCalculator(performance);
-      return total + performanceCalculator.calculatePerformanceVolumeCredits(performance);
+      return total + performanceCalculator.calculatePerformanceVolumeCredits();
     }, 0);
   }
 
@@ -52,9 +52,9 @@ export class StatementGenerator {
     const playType = this.plays.get(performance.playID)!.type;
     switch (playType) {
       case PlayType.Comedy:
-        return new ComedyPerformanceCalculator(this.plays);
+        return new ComedyPerformanceCalculator(performance);
       case PlayType.Tragedy:
-        return new TragedyPerformanceCalculator(this.plays);
+        return new TragedyPerformanceCalculator(performance);
       default:
         throw new Error(`unknown type: ${playType}`);
     }
