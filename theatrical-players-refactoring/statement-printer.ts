@@ -19,8 +19,10 @@ interface Invoice {
 }
 
 interface Statement {
-  totalAmount: number,
-  volumeCredits: number
+  customer: string;
+  performances: Performance[];
+  totalAmount: number;
+  volumeCredits: number;
 }
 
 export class PerformanceCalculator {
@@ -85,12 +87,12 @@ export class StatementPrinter {
   ) {}
   print(invoice: Invoice): string {
     const statement = this.generateStatement(invoice);
-    return this.produceStatementText(invoice, statement);
+    return this.produceStatementText(statement);
   }
 
-  private produceStatementText(invoice: Invoice, statement: Statement) {
-    let result = `Statement for ${invoice.customer}\n`;
-    for (const performance of invoice.performances) {
+  private produceStatementText(statement: Statement): string {
+    let result = `Statement for ${statement.customer}\n`;
+    for (const performance of statement.performances) {
       // print line for this order
       result += ` ${this.plays.get(performance.playID)!.name}: ${this.formatCentsToUSD(this.performanceCalculator.calculatePerformanceAmount(performance))} (${performance.audience} seats)\n`;
     }
@@ -101,6 +103,8 @@ export class StatementPrinter {
 
   private generateStatement(invoice: Invoice): Statement {
     return {
+      customer: invoice.customer,
+      performances: invoice.performances,
       totalAmount: this.invoiceCalculator.calculateTotalAmount(invoice),
       volumeCredits: this.invoiceCalculator.calculateTotalVolumeCredits(invoice)
     }
