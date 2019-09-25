@@ -1,6 +1,11 @@
 interface Play {
-  name: string; 
+  name: string;
   type: string;
+}
+
+interface Performance {
+  playID: string;
+  audience: number;
 }
 
 export class StatementPrinter {
@@ -30,7 +35,7 @@ export class StatementPrinter {
     return result;
   }
 
-  private calculateAmount(play: Play, performance: any) {
+  private calculateAmount(play: Play, performance: Performance) {
     let amount = 0;
     switch (play.type) {
       case 'tragedy':
