@@ -1,3 +1,5 @@
+import { performance } from "perf_hooks";
+
 interface Play {
   name: string;
   type: string;
@@ -20,7 +22,7 @@ interface Invoice {
 
 interface Statement {
   customer: string;
-  performances: Performance[];
+  performances: { playName: string; playID: string; audience: number }[];
   totalAmount: number;
   volumeCredits: number;
 }
@@ -94,7 +96,9 @@ export class StatementPrinter {
     let result = `Statement for ${statement.customer}\n`;
     for (const performance of statement.performances) {
       // print line for this order
-      result += ` ${this.plays.get(performance.playID)!.name}: ${this.formatCentsToUSD(this.performanceCalculator.calculatePerformanceAmount(performance))} (${performance.audience} seats)\n`;
+      result += ` ${performance.playName}: ${this.formatCentsToUSD(
+        this.performanceCalculator.calculatePerformanceAmount(performance)
+      )} (${performance.audience} seats)\n`;
     }
     result += `Amount owed is ${this.formatCentsToUSD(statement.totalAmount)}\n`;
     result += `You earned ${statement.volumeCredits} credits\n`;
@@ -104,10 +108,10 @@ export class StatementPrinter {
   private generateStatement(invoice: Invoice): Statement {
     return {
       customer: invoice.customer,
-      performances: invoice.performances,
+      performances: invoice.performances.map(performance => ({...performance, playName: this.plays.get(performance.playID)!.name })),
       totalAmount: this.invoiceCalculator.calculateTotalAmount(invoice),
       volumeCredits: this.invoiceCalculator.calculateTotalVolumeCredits(invoice)
-    }
+    };
   }
 
   private formatCentsToUSD(value: number): string {
