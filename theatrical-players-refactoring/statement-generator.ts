@@ -52,7 +52,7 @@ export class StatementGenerator {
       case PlayType.Comedy:
         return new ComedyPerformanceCalculator(this.plays);
       case PlayType.Tragedy:
-        return new PerformanceCalculator(this.plays);
+        return new TragedyPerformanceCalculator(this.plays);
       default:
         throw new Error(`unknown type: ${playType}`);
     }
@@ -63,21 +63,7 @@ export class PerformanceCalculator {
   constructor(private plays: Map<string, Play>) {}
 
   public calculatePerformanceAmount(performance: Performance): number {
-    let amount = 0;
-    const playType = this.plays.get(performance.playID)!.type;
-    switch (playType) {
-      case PlayType.Tragedy:
-        amount = 400_00;
-        if (performance.audience > 30) {
-          amount += 10_00 * (performance.audience - 30);
-        }
-        break;
-      case PlayType.Comedy:
-        throw 'Should be implemented in subclass';
-      default:
-        throw new Error(`unknown type: ${playType}`);
-    }
-    return amount;
+    throw 'implemented in subclass';
   }
 
   public calculatePerformanceVolumeCredits(performance: Performance): number {
@@ -96,6 +82,16 @@ class ComedyPerformanceCalculator extends PerformanceCalculator {
       amount += 100_00 + 5_00 * (performance.audience - 20);
     }
     amount += 3_00 * performance.audience;
+    return amount;
+  }
+}
+
+class TragedyPerformanceCalculator extends PerformanceCalculator {
+  calculatePerformanceAmount(performance: Performance): number {
+    let amount = 400_00;
+    if (performance.audience > 30) {
+      amount += 10_00 * (performance.audience - 30);
+    }
     return amount;
   }
 }
