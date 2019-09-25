@@ -17,12 +17,11 @@ export class StatementPrinter {
   constructor(private plays: { [index: string]: Play }) {}
   print(invoice: Invoice) {
     let totalAmount = 0;
-    let volumeCredits = 0;
+    const volumeCredits = this.calculateTotalVolumeCredits(invoice);
     let result = `Statement for ${invoice.customer}\n`;
 
     for (const performance of invoice.performances) {
       const thisAmount = this.calculateAmount(performance);
-      volumeCredits += this.calculatePerformanceVolumeCredits(performance);
       // print line for this order
       result += ` ${this.getPlayById(performance.playID).name}: ${this.formatCentsToUSD(
         thisAmount
@@ -32,6 +31,14 @@ export class StatementPrinter {
     result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
+  }
+
+  private calculateTotalVolumeCredits(invoice: Invoice): number {
+    let volumeCredits = 0;
+    for (const performance of invoice.performances) {
+      volumeCredits += this.calculatePerformanceVolumeCredits(performance);
+    }
+    return volumeCredits;
   }
 
   private calculateAmount(performance: Performance): number {
