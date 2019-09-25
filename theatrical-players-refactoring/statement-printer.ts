@@ -24,12 +24,12 @@ export class StatementPrinter {
       const thisAmount = this.calculateAmount(performance);
       volumeCredits += this.calculateVolumeCredits(performance);
       // print line for this order
-      result += ` ${this.getPlayById(performance.playID).name}: ${this.format(thisAmount / 100)} (${
+      result += ` ${this.getPlayById(performance.playID).name}: ${this.format(thisAmount)} (${
         performance.audience
       } seats)\n`;
       totalAmount += thisAmount;
     }
-    result += `Amount owed is ${this.format(totalAmount / 100)}\n`;
+    result += `Amount owed is ${this.format(totalAmount)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
   }
@@ -74,6 +74,6 @@ export class StatementPrinter {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2
-    }).format(value);
+    }).format(value / 100);
   }
 }
