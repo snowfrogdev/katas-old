@@ -19,24 +19,27 @@ export class StatementPrinter {
     let totalAmount = 0;
     let volumeCredits = 0;
     let result = `Statement for ${invoice.customer}\n`;
-    const format = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    }).format;
 
     for (const performance of invoice.performances) {
       const thisAmount = this.calculateAmount(performance);
       volumeCredits += this.calculateVolumeCredits(performance);
       // print line for this order
-      result += ` ${this.getPlayById(performance.playID).name}: ${format(thisAmount / 100)} (${
+      result += ` ${this.getPlayById(performance.playID).name}: ${this.format(thisAmount / 100)} (${
         performance.audience
       } seats)\n`;
       totalAmount += thisAmount;
     }
-    result += `Amount owed is ${format(totalAmount / 100)}\n`;
+    result += `Amount owed is ${this.format(totalAmount / 100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
+  }
+
+  private format(value: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    }).format(value);
   }
 
   private calculateAmount(performance: Performance) {
