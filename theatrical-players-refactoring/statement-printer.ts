@@ -10,7 +10,7 @@ interface Performance {
 
 interface Invoice {
   customer: string;
-  performances: Performance[]
+  performances: Performance[];
 }
 
 export class StatementPrinter {
@@ -50,17 +50,17 @@ export class StatementPrinter {
     const playType = this.getPlayById(performance.playID).type;
     switch (playType) {
       case 'tragedy':
-        amount = 40000;
+        amount = 400_00;
         if (performance.audience > 30) {
-          amount += 1000 * (performance.audience - 30);
+          amount += 10_00 * (performance.audience - 30);
         }
         break;
       case 'comedy':
-        amount = 30000;
+        amount = 300_00;
         if (performance.audience > 20) {
-          amount += 10000 + 500 * (performance.audience - 20);
+          amount += 100_00 + 5_00 * (performance.audience - 20);
         }
-        amount += 300 * performance.audience;
+        amount += 3_00 * performance.audience;
         break;
       default:
         throw new Error(`unknown type: ${playType}`);
