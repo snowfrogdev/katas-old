@@ -8,9 +8,14 @@ interface Performance {
   audience: number;
 }
 
+interface Invoice {
+  customer: string;
+  performances: Performance[]
+}
+
 export class StatementPrinter {
   constructor(private plays: { [index: string]: Play }) {}
-  print(invoice: any) {
+  print(invoice: Invoice) {
     let totalAmount = 0;
     let volumeCredits = 0;
     let result = `Statement for ${invoice.customer}\n`;
