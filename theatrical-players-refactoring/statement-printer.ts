@@ -21,7 +21,7 @@ export class StatementPrinter {
     let result = `Statement for ${invoice.customer}\n`;
 
     for (const performance of invoice.performances) {
-      const thisAmount = this.calculateAmount(performance);
+      const thisAmount = this.calculatePerformanceAmount(performance);
       // print line for this order
       result += ` ${this.getPlayById(performance.playID).name}: ${this.formatCentsToUSD(
         thisAmount
@@ -41,7 +41,7 @@ export class StatementPrinter {
     return volumeCredits;
   }
 
-  private calculateAmount(performance: Performance): number {
+  private calculatePerformanceAmount(performance: Performance): number {
     let amount = 0;
     const playType = this.getPlayById(performance.playID).type;
     switch (playType) {
