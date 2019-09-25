@@ -1,3 +1,8 @@
+interface Play {
+  name: string; 
+  type: string;
+}
+
 export class StatementPrinter {
   print(invoice: any, plays: any) {
     let totalAmount = 0;
@@ -25,7 +30,7 @@ export class StatementPrinter {
     return result;
   }
 
-  private calculateAmount(play: any, performance: any) {
+  private calculateAmount(play: Play, performance: any) {
     let amount = 0;
     switch (play.type) {
       case 'tragedy':
