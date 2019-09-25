@@ -39,18 +39,6 @@ export class StatementPrinter {
     return result;
   }
 
-  private calculateVolumeCredits(performance: Performance) {
-    let volumeCredits = 0;
-    volumeCredits += Math.max(performance.audience - 30, 0);
-    if ('comedy' === this.getPlayById(performance.playID).type)
-      volumeCredits += Math.floor(performance.audience / 5);
-    return volumeCredits;
-  }
-
-  private getPlayById(playId: string): Play {
-    return this.plays[playId];
-  }
-
   private calculateAmount(performance: Performance) {
     let amount = 0;
     const playType = this.getPlayById(performance.playID).type;
@@ -72,5 +60,17 @@ export class StatementPrinter {
         throw new Error(`unknown type: ${playType}`);
     }
     return amount;
+  }
+
+  private calculateVolumeCredits(performance: Performance) {
+    let volumeCredits = 0;
+    volumeCredits += Math.max(performance.audience - 30, 0);
+    if ('comedy' === this.getPlayById(performance.playID).type)
+      volumeCredits += Math.floor(performance.audience / 5);
+    return volumeCredits;
+  }
+
+  private getPlayById(playId: string): Play {
+    return this.plays[playId];
   }
 }
