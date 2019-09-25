@@ -26,11 +26,12 @@ export class StatementPrinter {
     }).format;
 
     for (const performance of invoice.performances) {
-      const play = this.getPlayById(performance.playID);
       const thisAmount = this.calculateAmount(performance);
       volumeCredits += this.calculateVolumeCredits(performance);
       // print line for this order
-      result += ` ${play.name}: ${format(thisAmount / 100)} (${performance.audience} seats)\n`;
+      result += ` ${this.getPlayById(performance.playID).name}: ${format(thisAmount / 100)} (${
+        performance.audience
+      } seats)\n`;
       totalAmount += thisAmount;
     }
     result += `Amount owed is ${format(totalAmount / 100)}\n`;
