@@ -69,20 +69,30 @@ export class PerformanceCalculator {
 }
 
 export class InvoiceCalculator {
-  constructor(private performanceCalculator: PerformanceCalculator) {}
+  constructor(private plays: Map<string, Play>) {}
   public calculateTotalAmount(invoice: Invoice): number {
-    return invoice.performances.reduce(
-      (total, performance) =>
-        total + this.performanceCalculator.calculatePerformanceAmount(performance),
-      0
-    );
+    return invoice.performances.reduce((total, performance) => {
+      const performanceCalculator = this.createPerformanceCalculator(performance);
+      return total + performanceCalculator.calculatePerformanceAmount(performance);
+    }, 0);
   }
 
   public calculateTotalVolumeCredits(invoice: Invoice): number {
-    return invoice.performances.reduce(
-      (total, performance) =>
-        total + this.performanceCalculator.calculatePerformanceVolumeCredits(performance),
-      0
-    );
+    return invoice.performances.reduce((total, performance) => {
+      const performanceCalculator = this.createPerformanceCalculator(performance);
+      return total + performanceCalculator.calculatePerformanceVolumeCredits(performance);
+    }, 0);
+  }
+
+  private createPerformanceCalculator(performance: Performance): PerformanceCalculator {
+    const playType = this.plays.get(performance.playID)!.type;
+    switch (playType) {
+      case PlayType.Comedy:
+        return new PerformanceCalculator(this.plays);
+      case PlayType.Tragedy:
+        return new PerformanceCalculator(this.plays);
+      default:
+        throw new Error(`unknown type: ${playType}`);
+    }
   }
 }

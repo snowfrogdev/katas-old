@@ -11,7 +11,7 @@ test('example statement', () => {
   const generator = new StatementGenerator(
     playsMap,
     performanceCalculator,
-    new InvoiceCalculator(performanceCalculator)
+    new InvoiceCalculator(playsMap)
   );
   const printer = new StatementPrinter(generator);
   expect(printer.print(invoice)).toMatchSnapshot();
@@ -24,7 +24,7 @@ test('statement with new play types', () => {
     const generator = new StatementGenerator(
       newPlaysMap,
       performanceCalculator,
-      new InvoiceCalculator(performanceCalculator)
+      new InvoiceCalculator(newPlaysMap)
     );
     const printer = new StatementPrinter(generator);
     printer.print(newInvoice);
