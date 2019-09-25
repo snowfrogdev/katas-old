@@ -1,5 +1,7 @@
 {
   "hamlet": { "name": "Hamlet", "type": "tragedy" },
   "as-like": { "name": "As You Like It", "type": "comedy" },
-  "othello": { "name": "Othello", "type": "tragedy" }
+  "othello": { "name": "Othello", "type": "tragedy" },
+  "mouse-trap": { "name": "Mouse Trap", "type": "mystery"},
+  "death-salesman": { "name": "Death of a Salesman", "type": "horror"}
 }

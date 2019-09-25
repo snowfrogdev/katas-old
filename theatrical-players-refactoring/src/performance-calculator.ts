@@ -39,3 +39,29 @@ export class TragedyPerformanceCalculator extends PerformanceCalculator {
     return amount;
   }
 }
+
+export class MysteryPerformanceCalculator extends PerformanceCalculator {
+  constructor(performance: Performance) {
+    super(performance);
+  }
+  calculateAmount(): number {
+    let amount = 250_00;
+    if (this.performance.audience > 15) {
+      amount += 15_00 * (this.performance.audience - 15);
+    }
+    return amount;
+  }
+}
+
+export class HorrorPerformanceCalculator extends PerformanceCalculator {
+  constructor(performance: Performance) {
+    super(performance);
+  }
+  calculateAmount(): number {
+    let amount = 600_00;
+    if (this.performance.audience > 20) {
+      amount += 5_00 * (this.performance.audience - 20);
+    }
+    return amount;
+  }
+}

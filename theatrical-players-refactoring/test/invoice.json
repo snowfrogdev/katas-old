@@ -12,6 +12,14 @@
     {
       "playID": "othello",
       "audience": 40
+    },
+    {
+      "playID": "death-salesman",
+      "audience": 60
+    },
+    {
+      "playID": "mouse-trap",
+      "audience": 43
     }
   ]
 }

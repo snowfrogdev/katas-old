@@ -1,12 +1,16 @@
 import {
   PerformanceCalculator,
   ComedyPerformanceCalculator,
-  TragedyPerformanceCalculator
+  TragedyPerformanceCalculator,
+  MysteryPerformanceCalculator,
+  HorrorPerformanceCalculator
 } from './performance-calculator';
 
 export enum PlayType {
   Tragedy = 'tragedy',
-  Comedy = 'comedy'
+  Comedy = 'comedy',
+  Mystery = 'mystery',
+  Horror = 'horror'
 }
 
 export class StatementGenerator {
@@ -59,6 +63,10 @@ export class StatementGenerator {
         return new ComedyPerformanceCalculator(performance);
       case PlayType.Tragedy:
         return new TragedyPerformanceCalculator(performance);
+      case PlayType.Mystery:
+        return new MysteryPerformanceCalculator(performance);
+      case PlayType.Horror:
+        return new HorrorPerformanceCalculator(performance);
       default:
         throw new Error(`unknown type: ${playType}`);
     }
