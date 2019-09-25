@@ -1,11 +1,11 @@
 interface Play {
   name: string;
-  type: PlayType;
+  type: string;
 }
 
 enum PlayType {
-  Tragedy = "tragedy",
-  Comedy = "comedy",
+  Tragedy = 'tragedy',
+  Comedy = 'comedy'
 }
 
 interface Performance {
@@ -19,7 +19,7 @@ interface Invoice {
 }
 
 export class StatementPrinter {
-  constructor(private plays: { [index: string]: Play }) {}
+  constructor(private plays: Map<string, Play>) {}
   print(invoice: Invoice) {
     let totalAmount = this.calculateTotalAmount(invoice);
     const volumeCredits = this.calculateTotalVolumeCredits(invoice);
@@ -27,7 +27,7 @@ export class StatementPrinter {
 
     for (const performance of invoice.performances) {
       // print line for this order
-      result += ` ${this.getPlayById(performance.playID).name}: ${this.formatCentsToUSD(
+      result += ` ${this.plays.get(performance.playID)!.name}: ${this.formatCentsToUSD(
         this.calculatePerformanceAmount(performance)
       )} (${performance.audience} seats)\n`;
     }
@@ -52,7 +52,7 @@ export class StatementPrinter {
 
   private calculatePerformanceAmount(performance: Performance): number {
     let amount = 0;
-    const playType = this.getPlayById(performance.playID).type;
+    const playType = this.plays.get(performance.playID)!.type;
     switch (playType) {
       case PlayType.Tragedy:
         amount = 400_00;
@@ -76,13 +76,9 @@ export class StatementPrinter {
   private calculatePerformanceVolumeCredits(performance: Performance): number {
     let volumeCredits = 0;
     volumeCredits += Math.max(performance.audience - 30, 0);
-    if (PlayType.Comedy === this.getPlayById(performance.playID).type)
+    if (PlayType.Comedy === this.plays.get(performance.playID)!.type)
       volumeCredits += Math.floor(performance.audience / 5);
     return volumeCredits;
-  }
-
-  private getPlayById(playId: string): Play {
-    return this.plays[playId];
   }
 
   private formatCentsToUSD(value: number): string {
@@ -92,4 +88,8 @@ export class StatementPrinter {
       minimumFractionDigits: 2
     }).format(value / 100);
   }
+}
+
+export function convertObjectToMap<T>(object: { [key: string]: T }): Map<string, T> {
+  return new Map(Object.entries(object));
 }
