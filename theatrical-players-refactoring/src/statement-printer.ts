@@ -1,10 +1,15 @@
-import { StatementGenerator } from "./statement-generator";
+import { StatementGenerator } from './statement-generator';
 
 export class StatementPrinter {
   constructor(private generator: StatementGenerator) {}
   print(invoice: Invoice): string {
     const statement = this.generator.generateStatement(invoice);
     return this.produceStatementText(statement);
+  }
+
+  printHtml(invoice: Invoice): string {
+    const statement = this.generator.generateStatement(invoice);
+    return this.produceStatementHtml(statement);
   }
 
   private produceStatementText(statement: Statement): string {
@@ -15,6 +20,17 @@ export class StatementPrinter {
     }
     result += `Amount owed is ${statement.totalAmount}\n`;
     result += `You earned ${statement.volumeCredits} credits\n`;
+    return result;
+  }
+
+  private produceStatementHtml(statement: Statement): string {
+    let result = `<h1>Statement for ${statement.customer}</h1>\n`;
+    for (const performance of statement.performances) {
+      // print line for this order
+      result += ` <p>${performance.playName}: ${performance.amount} (${performance.audience} seats)</p>\n`;
+    }
+    result += `<p>Amount owed is <strong>${statement.totalAmount}</strong></p>\n`;
+    result += `<p>You earned <strong>${statement.volumeCredits}</strong> credits</p>\n`;
     return result;
   }
 }
