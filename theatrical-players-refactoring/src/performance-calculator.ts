@@ -1,8 +1,4 @@
-import { PlayType } from './statement-generator';
-
 export abstract class PerformanceCalculator {
-  constructor(private plays: Map<string, Play>) {}
-
   abstract calculatePerformanceAmount(performance: Performance): number;
 
   public calculatePerformanceVolumeCredits(performance: Performance): number {
