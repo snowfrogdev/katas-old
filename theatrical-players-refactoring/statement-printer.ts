@@ -21,7 +21,7 @@ export class StatementPrinter {
     }).format;
 
     for (let perf of invoice.performances) {
-      const play = this.plays[perf.playID];
+      const play = this.getPlayById(perf.playID);
       const thisAmount = this.calculateAmount(play, perf);
       // add volume credits
       volumeCredits += Math.max(perf.audience - 30, 0);
@@ -34,6 +34,10 @@ export class StatementPrinter {
     result += `Amount owed is ${format(totalAmount / 100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
+  }
+
+  private getPlayById(playId: string): Play {
+    return this.plays[playId];
   }
 
   private calculateAmount(play: Play, performance: Performance) {
