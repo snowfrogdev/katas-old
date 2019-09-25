@@ -25,15 +25,15 @@ export class StatementPrinter {
       minimumFractionDigits: 2
     }).format;
 
-    for (let perf of invoice.performances) {
-      const play = this.getPlayById(perf.playID);
-      const thisAmount = this.calculateAmount(perf);
+    for (const performance of invoice.performances) {
+      const play = this.getPlayById(performance.playID);
+      const thisAmount = this.calculateAmount(performance);
       // add volume credits
-      volumeCredits += Math.max(perf.audience - 30, 0);
+      volumeCredits += Math.max(performance.audience - 30, 0);
       // add extra credit for every ten comedy attendees
-      if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+      if ('comedy' === play.type) volumeCredits += Math.floor(performance.audience / 5);
       // print line for this order
-      result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+      result += ` ${play.name}: ${format(thisAmount / 100)} (${performance.audience} seats)\n`;
       totalAmount += thisAmount;
     }
     result += `Amount owed is ${format(totalAmount / 100)}\n`;
