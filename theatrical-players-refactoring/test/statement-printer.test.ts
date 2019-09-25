@@ -1,10 +1,5 @@
-import {
-  StatementPrinter,
-  convertObjectToMap,
-  PerformanceCalculator,
-  InvoiceCalculator,
-  StatementGenerator
-} from '../statement-printer';
+import { StatementPrinter, convertObjectToMap } from '../statement-printer';
+import { PerformanceCalculator, StatementGenerator, InvoiceCalculator } from '../statement-generator';
 import * as invoice from './invoice.json';
 import * as plays from './plays.json';
 import * as newInvoice from './invoice_new_plays.json';
