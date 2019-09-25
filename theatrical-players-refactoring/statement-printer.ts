@@ -1,3 +1,5 @@
+import { performance } from 'perf_hooks';
+
 interface Play {
   name: string;
   type: string;
@@ -32,19 +34,17 @@ export class StatementPrinter {
   }
 
   private calculateTotalAmount(invoice: Invoice): number {
-    let totalAmount = 0;
-    for (const performance of invoice.performances) { 
-      totalAmount += this.calculatePerformanceAmount(performance);
-    }
-    return totalAmount;
+    return invoice.performances.reduce(
+      (total, performance) => total + this.calculatePerformanceAmount(performance),
+      0
+    );
   }
 
   private calculateTotalVolumeCredits(invoice: Invoice): number {
-    let volumeCredits = 0;
-    for (const performance of invoice.performances) {
-      volumeCredits += this.calculatePerformanceVolumeCredits(performance);
-    }
-    return volumeCredits;
+    return invoice.performances.reduce(
+      (total, performance) => total + this.calculatePerformanceVolumeCredits(performance),
+      0
+    );
   }
 
   private calculatePerformanceAmount(performance: Performance): number {
