@@ -16,7 +16,7 @@ interface Invoice {
 export class StatementPrinter {
   constructor(private plays: { [index: string]: Play }) {}
   print(invoice: Invoice) {
-    let totalAmount = 0;
+    let totalAmount = this.calculateTotalAmount(invoice);
     const volumeCredits = this.calculateTotalVolumeCredits(invoice);
     let result = `Statement for ${invoice.customer}\n`;
 
@@ -25,11 +25,18 @@ export class StatementPrinter {
       result += ` ${this.getPlayById(performance.playID).name}: ${this.formatCentsToUSD(
         this.calculatePerformanceAmount(performance)
       )} (${performance.audience} seats)\n`;
-      totalAmount += this.calculatePerformanceAmount(performance);
     }
     result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
+  }
+
+  private calculateTotalAmount(invoice: Invoice): number {
+    let totalAmount = 0;
+    for (const performance of invoice.performances) { 
+      totalAmount += this.calculatePerformanceAmount(performance);
+    }
+    return totalAmount;
   }
 
   private calculateTotalVolumeCredits(invoice: Invoice): number {
