@@ -26,7 +26,7 @@ export class StatementGenerator {
     return {
       audience: performance.audience,
       playName: this.plays.get(performance.playID)!.name,
-      amount: this.formatCentsToUSD(performanceCalculator.calculatePerformanceAmount())
+      amount: this.formatCentsToUSD(performanceCalculator.calculateAmount())
     };
   }
 
@@ -41,14 +41,14 @@ export class StatementGenerator {
   private calculateTotalAmount(invoice: Invoice): number {
     return invoice.performances.reduce((total, performance) => {
       const performanceCalculator = this.createPerformanceCalculator(performance);
-      return total + performanceCalculator.calculatePerformanceAmount();
+      return total + performanceCalculator.calculateAmount();
     }, 0);
   }
 
   private calculateTotalVolumeCredits(invoice: Invoice): number {
     return invoice.performances.reduce((total, performance) => {
       const performanceCalculator = this.createPerformanceCalculator(performance);
-      return total + performanceCalculator.calculatePerformanceVolumeCredits();
+      return total + performanceCalculator.calculateVolumeCredits();
     }, 0);
   }
 

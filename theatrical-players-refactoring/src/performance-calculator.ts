@@ -1,8 +1,8 @@
 export abstract class PerformanceCalculator {
   constructor(protected performance: Performance) {}
-  abstract calculatePerformanceAmount(): number;
+  abstract calculateAmount(): number;
 
-  public calculatePerformanceVolumeCredits(): number {
+  public calculateVolumeCredits(): number {
     let volumeCredits = 0;
     volumeCredits += Math.max(this.performance.audience - 30, 0);
     return volumeCredits;
@@ -13,7 +13,7 @@ export class ComedyPerformanceCalculator extends PerformanceCalculator {
   constructor(performance: Performance) {
     super(performance);
   }
-  calculatePerformanceAmount(): number {
+  calculateAmount(): number {
     let amount = 300_00;
     if (this.performance.audience > 20) {
       amount += 100_00 + 5_00 * (this.performance.audience - 20);
@@ -22,8 +22,8 @@ export class ComedyPerformanceCalculator extends PerformanceCalculator {
     return amount;
   }
 
-  calculatePerformanceVolumeCredits() {
-    return super.calculatePerformanceVolumeCredits() + Math.floor(this.performance.audience / 5);
+  calculateVolumeCredits() {
+    return super.calculateVolumeCredits() + Math.floor(this.performance.audience / 5);
   }
 }
 
@@ -31,7 +31,7 @@ export class TragedyPerformanceCalculator extends PerformanceCalculator {
   constructor(performance: Performance) {
     super(performance);
   }
-  calculatePerformanceAmount(): number {
+  calculateAmount(): number {
     let amount = 400_00;
     if (this.performance.audience > 30) {
       amount += 10_00 * (this.performance.audience - 30);
