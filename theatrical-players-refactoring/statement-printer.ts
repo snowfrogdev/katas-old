@@ -79,37 +79,22 @@ export class InvoiceCalculator {
   }
 }
 
-export class StatementPrinter {
+export class StatementGenerator {
   constructor(
     private plays: Map<string, Play>,
     private performanceCalculator: PerformanceCalculator,
     private invoiceCalculator: InvoiceCalculator
   ) {}
-  print(invoice: Invoice): string {
-    const statement = this.generateStatement(invoice);
-    return this.produceStatementText(statement);
-  }
 
-  private produceStatementText(statement: Statement): string {
-    let result = `Statement for ${statement.customer}\n`;
-    for (const performance of statement.performances) {
-      // print line for this order
-      result += ` ${performance.playName}: ${performance.amount} (${
-        performance.audience
-      } seats)\n`;
-    }
-    result += `Amount owed is ${statement.totalAmount}\n`;
-    result += `You earned ${statement.volumeCredits} credits\n`;
-    return result;
-  }
-
-  private generateStatement(invoice: Invoice): Statement {
+  generateStatement(invoice: Invoice): Statement {
     return {
       customer: invoice.customer,
       performances: invoice.performances.map(performance => ({
         audience: performance.audience,
         playName: this.plays.get(performance.playID)!.name,
-        amount: this.formatCentsToUSD(this.performanceCalculator.calculatePerformanceAmount(performance))
+        amount: this.formatCentsToUSD(
+          this.performanceCalculator.calculatePerformanceAmount(performance)
+        )
       })),
       totalAmount: this.formatCentsToUSD(this.invoiceCalculator.calculateTotalAmount(invoice)),
       volumeCredits: this.invoiceCalculator.calculateTotalVolumeCredits(invoice)
@@ -122,6 +107,25 @@ export class StatementPrinter {
       currency: 'USD',
       minimumFractionDigits: 2
     }).format(value / 100);
+  }
+}
+
+export class StatementPrinter {
+  constructor(private generator: StatementGenerator) {}
+  print(invoice: Invoice): string {
+    const statement = this.generator.generateStatement(invoice);
+    return this.produceStatementText(statement);
+  }
+
+  private produceStatementText(statement: Statement): string {
+    let result = `Statement for ${statement.customer}\n`;
+    for (const performance of statement.performances) {
+      // print line for this order
+      result += ` ${performance.playName}: ${performance.amount} (${performance.audience} seats)\n`;
+    }
+    result += `Amount owed is ${statement.totalAmount}\n`;
+    result += `You earned ${statement.volumeCredits} credits\n`;
+    return result;
   }
 }
 
