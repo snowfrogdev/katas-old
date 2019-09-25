@@ -1,4 +1,8 @@
-import { PerformanceCalculator, ComedyPerformanceCalculator, TragedyPerformanceCalculator } from "./performance-calculator";
+import {
+  PerformanceCalculator,
+  ComedyPerformanceCalculator,
+  TragedyPerformanceCalculator
+} from './performance-calculator';
 
 export enum PlayType {
   Tragedy = 'tragedy',
@@ -11,18 +15,18 @@ export class StatementGenerator {
   generateStatement(invoice: Invoice): Statement {
     return {
       customer: invoice.customer,
-      performances: invoice.performances.map(performance => {
-        const performanceCalculator = this.createPerformanceCalculator(performance);
-        return {
-          audience: performance.audience,
-          playName: this.plays.get(performance.playID)!.name,
-          amount: this.formatCentsToUSD(
-            performanceCalculator.calculatePerformanceAmount()
-          )
-        };
-      }),
+      performances: invoice.performances.map(this.mapPerformance, this),
       totalAmount: this.formatCentsToUSD(this.calculateTotalAmount(invoice)),
       volumeCredits: this.calculateTotalVolumeCredits(invoice)
+    };
+  }
+
+  private mapPerformance(performance: Performance) {
+    const performanceCalculator = this.createPerformanceCalculator(performance);
+    return {
+      audience: performance.audience,
+      playName: this.plays.get(performance.playID)!.name,
+      amount: this.formatCentsToUSD(performanceCalculator.calculatePerformanceAmount())
     };
   }
 
