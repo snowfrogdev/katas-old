@@ -57,17 +57,30 @@ export class InvoiceCalculator {
   constructor(private performanceCalculator: PerformanceCalculator) {}
   public calculateTotalAmount(invoice: Invoice): number {
     return invoice.performances.reduce(
-      (total, performance) => total + this.performanceCalculator.calculatePerformanceAmount(performance),
+      (total, performance) =>
+        total + this.performanceCalculator.calculatePerformanceAmount(performance),
+      0
+    );
+  }
+
+  public calculateTotalVolumeCredits(invoice: Invoice): number {
+    return invoice.performances.reduce(
+      (total, performance) =>
+        total + this.performanceCalculator.calculatePerformanceVolumeCredits(performance),
       0
     );
   }
 }
 
 export class StatementPrinter {
-  constructor(private plays: Map<string, Play>, private performanceCalculator: PerformanceCalculator, private invoiceCalculator: InvoiceCalculator) {}
+  constructor(
+    private plays: Map<string, Play>,
+    private performanceCalculator: PerformanceCalculator,
+    private invoiceCalculator: InvoiceCalculator
+  ) {}
   print(invoice: Invoice) {
     let totalAmount = this.invoiceCalculator.calculateTotalAmount(invoice);
-    const volumeCredits = this.calculateTotalVolumeCredits(invoice);
+    const volumeCredits = this.invoiceCalculator.calculateTotalVolumeCredits(invoice);
     let result = `Statement for ${invoice.customer}\n`;
 
     for (const performance of invoice.performances) {
@@ -79,13 +92,6 @@ export class StatementPrinter {
     result += `Amount owed is ${this.formatCentsToUSD(totalAmount)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
-  }
-
-  private calculateTotalVolumeCredits(invoice: Invoice): number {
-    return invoice.performances.reduce(
-      (total, performance) => total + this.performanceCalculator.calculatePerformanceVolumeCredits(performance),
-      0
-    );
   }
 
   private formatCentsToUSD(value: number): string {
