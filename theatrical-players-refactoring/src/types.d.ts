@@ -19,3 +19,7 @@ interface Play {
   name: string;
   type: string;
 }
+
+interface PrintStrategy {
+  print(invoice: Invoice): string
+}
