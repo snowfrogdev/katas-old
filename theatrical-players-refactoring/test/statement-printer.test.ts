@@ -5,21 +5,21 @@ import * as plays from './plays.json';
 import * as newInvoice from './invoice_new_plays.json';
 import * as newPlays from './new_plays.json';
 
-test('example text statement', () => {
+xtest('example text statement', () => {
   const playsMap = convertObjectToMap(plays);
   const generator = new StatementGenerator(playsMap);
   const printer = new StatementPrinter(new PrintTextStrategy(generator));
   expect(printer.print(invoice)).toMatchSnapshot();
 });
 
-test('example html statement', () => {
+xtest('example html statement', () => {
   const playsMap = convertObjectToMap(plays);
   const generator = new StatementGenerator(playsMap);
   const printer = new StatementPrinter(new PrintHtmlStrategy(generator));
   expect(printer.print(invoice)).toMatchSnapshot();
 })
 
-test('statement with new play types', () => {
+xtest('statement with new play types', () => {
   expect(() => {
     const newPlaysMap = convertObjectToMap(newPlays);
     const generator = new StatementGenerator(newPlaysMap);
